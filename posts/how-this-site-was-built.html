@@ -5,15 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>如何用 Claude Code 半天搭起这个博客 · 亚轩的梯子</title>
 <meta name="description" content="一次 Brief → Design → Build → Deploy 的完整记录：从一句"想做个博客"到线上可访问。">
+<meta name="theme-color" content="#FAF8F3">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23FAF8F3'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Songti SC, Noto Serif SC, serif' font-size='22' font-weight='700' fill='%238B3A2F'>梯</text></svg>">
+<script>
+(function(){try{var l=localStorage.getItem('site-lang')||'zh';var d=document.documentElement;d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':'en');}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #FAF8F3;
   --ink: #1A1A1A;
   --ink-2: #4A4A4A;
-  --ink-3: #8A8A8A;
+  --ink-3: #6E6E6E;
   --ink-4: #B8B0A0;
   --rule: #D9D2C2;
   --accent: #8B3A2F;
@@ -42,6 +48,7 @@ body {
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern", "liga", "calt";
   font-variant-numeric: oldstyle-nums proportional-nums;
+  font-synthesis: none;
   overflow-x: hidden;
 }
 .en, [lang="en"] {
@@ -53,13 +60,17 @@ body {
 
 nav.site {
   position: sticky; top: 0; z-index: 20;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: rgba(250, 248, 243, 0.94);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: calc(var(--u) * 2.5) 0;
   display: flex; justify-content: space-between; align-items: baseline;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  nav.site { background: var(--bg); }
 }
 nav.site.scrolled { border-bottom-color: var(--rule); }
 .mark {
@@ -114,11 +125,18 @@ html[data-lang="en"] .toggle .opt[data-k="en"] {
 [data-lang="en"] .article-head h1 { font-family: var(--serif-en); font-weight: 500; }
 .article-head .subtitle {
   margin-top: calc(var(--u) * 2);
-  font-family: var(--serif-en);
-  font-style: italic;
   font-size: 1.0625rem;
   color: var(--ink-2);
+  font-weight: 400;
+  line-height: 1.6;
+}
+.article-head .subtitle [lang="en"] {
+  font-family: var(--serif-en);
+  font-style: italic;
   font-weight: 300;
+}
+.article-head .subtitle [lang="zh"] {
+  font-family: var(--serif-cn);
 }
 .meta {
   margin-top: calc(var(--u) * 4);
@@ -139,15 +157,22 @@ article.prose {
 article.prose p {
   margin-bottom: 1.5em;
 }
-article.prose p:first-of-type::first-letter {
-  font-family: var(--serif-cn);
-  font-weight: 700;
-  font-size: 2.4em;
-  float: left;
-  line-height: 1;
-  padding: 0.12em 0.15em 0 0;
+article.prose [lang="en"] p {
+  hyphens: auto;
 }
-[data-lang="en"] article.prose p:first-of-type::first-letter { font-family: var(--serif-en); }
+article.prose [lang="en"] > p:first-of-type::first-letter {
+  font-family: var(--serif-en);
+  font-weight: 500;
+  font-size: 3.2em;
+  float: left;
+  line-height: 0.88;
+  padding: 0.08em 0.1em 0 0;
+  color: var(--ink);
+}
+article.prose [lang="zh"] > p:first-of-type::first-line {
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
 article.prose h2 {
   font-family: var(--serif-cn);
   font-weight: 700;
@@ -173,7 +198,8 @@ article.prose blockquote {
   font-size: 1rem;
   line-height: 1.9;
 }
-article.prose em { font-style: italic; }
+article.prose em { font-style: italic; color: var(--ink); }
+article.prose [lang="zh"] em { font-style: normal; font-weight: 600; }
 article.prose strong { font-weight: 500; color: var(--ink); }
 article.prose a {
   color: var(--ink);
@@ -194,12 +220,14 @@ article.prose li {
 }
 article.prose code {
   font-family: var(--mono);
-  font-size: 0.875em;
+  font-size: 0.92em;
   background: var(--code-bg);
-  padding: 0.15em 0.4em;
+  padding: 0.1em 0.4em;
   border-radius: 2px;
   color: var(--ink);
+  white-space: nowrap;
 }
+article.prose pre code { white-space: inherit; }
 article.prose pre {
   background: var(--code-bg);
   padding: calc(var(--u) * 2.5) calc(var(--u) * 3);
@@ -218,14 +246,24 @@ article.prose pre code {
 article.prose hr {
   border: none;
   text-align: center;
-  margin: 2.5em 0;
-  color: var(--ink-4);
+  margin: 2.8em 0;
+  height: 1em;
+  color: var(--ink-3);
+  font-size: 0.9em;
   line-height: 1;
+  letter-spacing: 0.6em;
 }
 article.prose hr::before {
-  content: "❦";
+  content: "· · ·";
   font-family: var(--serif-en);
 }
+article.prose .coda {
+  margin-top: 2em;
+  color: var(--ink-3);
+  font-size: 0.9375rem;
+  font-style: italic;
+}
+article.prose [lang="zh"] .coda { font-style: normal; }
 article.prose table {
   width: 100%;
   border-collapse: collapse;
@@ -320,7 +358,7 @@ a:focus-visible, button:focus-visible {
 
   <nav class="site" id="nav">
     <a href="../index.html" class="mark">
-      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan’s Ladder</span>
     </a>
     <button class="toggle" id="langToggle" aria-label="Switch language">
       <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
@@ -388,7 +426,7 @@ a:focus-visible, button:focus-visible {
         <tr><th>Tone</th><td>克制、温暖、可读</td></tr>
       </table>
 
-      <p>然后是 <strong>反参考</strong>——深色+渐变、卡片阴影、SaaS landing、emoji 装饰——这些"AI slop"一旦出现，一个博客就立刻降维成模板站。</p>
+      <p>然后是 <strong>反参考</strong>——深色加渐变、卡片阴影、SaaS landing page、emoji 装饰——任何一样出现，博客就会立刻塌缩成模板站。</p>
 
       <h2>第三阶段 · Build</h2>
 
@@ -422,7 +460,7 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
 
       <hr>
 
-      <p class="en" style="color: var(--ink-3); font-size: 0.9rem;"><em>This post was written collaboratively with Claude Code itself. The site you're looking at is the artifact.</em></p>
+      <p class="coda">这篇文章与 Claude Code 共同写就。你正在看的站点就是它生产的副产物。</p>
     </div>
 
     <div lang="en">
@@ -432,7 +470,7 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
 
       <h2>Phase 1 · Brief</h2>
 
-      <p>I didn't let it write code immediately. Claude first asked me a list of questions: who are you, what's the site for, what languages, what sections, what materials do you have, any aesthetic references. These feel like overhead — until you've shipped a project that skipped the Brief and had to be rebuilt in week two.</p>
+      <p>I didn’t let it write code immediately. Claude first asked me a list of questions: who are you, what’s the site for, what languages, what sections, what materials do you have, any aesthetic references. These feel like overhead — until you’ve shipped a project that skipped the Brief and had to be rebuilt in week two.</p>
 
       <p>My answers were short:</p>
 
@@ -474,7 +512,7 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
         <li>No npm, no build, no framework. Google Fonts is the only external dependency.</li>
       </ul>
 
-      <p>Language switching uses <code>localStorage</code> to remember the choice, and CSS driven by a <code>[data-lang]</code> attribute on <code>&lt;html&gt;</code>. One key decision: <strong>it's not two sites, it's one site with two language tracks</strong>. Routing, bookmarks, and shared links all keep working.</p>
+      <p>Language switching uses <code>localStorage</code> to remember the choice, and CSS driven by a <code>[data-lang]</code> attribute on <code>&lt;html&gt;</code>. One key decision: <strong>it’s not two sites, it’s one site with two language tracks</strong>. Routing, bookmarks, and shared links all keep working.</p>
 
       <pre><code>html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
 html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
@@ -495,7 +533,7 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
 
       <hr>
 
-      <p style="color: var(--ink-3); font-size: 0.9rem;"><em>This post was written collaboratively with Claude Code itself. The site you're looking at is the artifact.</em></p>
+      <p class="coda">This post was written collaboratively with Claude Code itself. The site you’re looking at is the artifact.</p>
     </div>
 
   </article>
@@ -509,7 +547,7 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
     <a class="next" href="./ladder-origin.html">
       <span class="label"><span lang="zh">下一篇</span><span lang="en">Next</span></span>
       <span lang="zh">亚轩的梯子：一个站名的来历</span>
-      <span lang="en">Yaxuan's Ladder: On the Name</span>
+      <span lang="en">Yaxuan’s Ladder: On the Name</span>
     </a>
   </nav>
 

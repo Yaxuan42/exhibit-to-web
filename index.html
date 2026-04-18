@@ -3,20 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>亚轩的梯子 · Yaxuan's Ladder</title>
+<title>亚轩的梯子 · Yaxuan’s Ladder</title>
 <meta name="description" content="产品、AI，以及那些用过就该扔掉的思考。A personal notebook by Yaxuan.">
-<meta property="og:title" content="亚轩的梯子 · Yaxuan's Ladder">
+<meta property="og:title" content="亚轩的梯子 · Yaxuan’s Ladder">
 <meta property="og:description" content="产品、AI，以及那些用过就该扔掉的思考。">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#FAF8F3">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23FAF8F3'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Songti SC, Noto Serif SC, serif' font-size='22' font-weight='700' fill='%238B3A2F'>梯</text></svg>">
+<script>
+(function(){try{var l=localStorage.getItem('site-lang')||'zh';var d=document.documentElement;d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':'en');}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #FAF8F3;
   --ink: #1A1A1A;
   --ink-2: #4A4A4A;
-  --ink-3: #8A8A8A;
+  --ink-3: #6E6E6E;
   --ink-4: #B8B0A0;
   --rule: #D9D2C2;
   --accent: #8B3A2F;
@@ -45,6 +51,7 @@ body {
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern", "liga", "calt";
   font-variant-numeric: oldstyle-nums proportional-nums;
+  font-synthesis: none;
   overflow-x: hidden;
 }
 
@@ -60,7 +67,7 @@ body {
 }
 
 .wrap {
-  max-width: 680px;
+  max-width: 640px;
   margin: 0 auto;
   padding: 0 calc(var(--u) * 3);
 }
@@ -70,7 +77,8 @@ nav.site {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: rgba(250, 248, 243, 0.94);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: calc(var(--u) * 2.5) 0;
@@ -79,6 +87,9 @@ nav.site {
   align-items: baseline;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  nav.site { background: var(--bg); }
 }
 nav.site.scrolled { border-bottom-color: var(--rule); }
 
@@ -90,15 +101,6 @@ nav.site.scrolled { border-bottom-color: var(--rule); }
   color: var(--ink);
   text-decoration: none;
 }
-.mark .en-mark {
-  font-family: var(--serif-en);
-  font-style: italic;
-  font-weight: 400;
-  color: var(--ink-2);
-  margin-left: 0.5em;
-  font-size: 0.88em;
-}
-
 .toggle {
   font-family: var(--mono);
   font-size: 0.6875rem;
@@ -182,6 +184,10 @@ html[data-lang="en"] .toggle .opt[data-k="en"] {
 .epigraph blockquote em {
   font-style: italic;
   color: var(--ink);
+}
+.epigraph blockquote [lang="zh"] em {
+  font-style: normal;
+  font-weight: 600;
 }
 .epigraph cite {
   display: block;
@@ -303,7 +309,7 @@ footer.site .copy {
     gap: calc(var(--u) * 1.5);
     padding: calc(var(--u) * 3) 0;
   }
-  .archive .date { order: 2; font-size: 0.65rem; padding-top: 0; }
+  .archive .date { order: 2; font-size: 0.7rem; padding-top: calc(var(--u) * 0.5); color: var(--ink-3); }
   .archive .entry { order: 1; }
   footer.site {
     flex-direction: column;
@@ -313,7 +319,7 @@ footer.site .copy {
 }
 
 /* ============ Language visibility ============ */
-html[data-lang="zh"] [lang="en"]:not(.en-mark):not(.bilingual) { display: none; }
+html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
 html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }
 
 /* ============ Motion ============ */
@@ -324,6 +330,9 @@ html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }
               transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 .reveal.in { opacity: 1; transform: translateY(0); }
+.reveal:nth-of-type(1) { transition-delay: 0s; }
+.reveal:nth-of-type(2) { transition-delay: 0.12s; }
+.reveal:nth-of-type(3) { transition-delay: 0.24s; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
 }
@@ -342,7 +351,7 @@ a:focus-visible, button:focus-visible {
 
     <nav class="site" id="nav">
       <a href="./index.html" class="mark">
-        <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+        <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan’s Ladder</span>
       </a>
       <button class="toggle" id="langToggle" aria-label="Switch language">
         <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
@@ -352,7 +361,7 @@ a:focus-visible, button:focus-visible {
     <section class="hero reveal">
       <h1 class="hero-title">
         <span class="cn">亚轩的梯子</span>
-        <span class="en">Yaxuan's Ladder</span>
+        <span class="en">Yaxuan’s Ladder</span>
       </h1>
       <p class="tagline">
         <span lang="zh">产品、AI，以及那些用过就该扔掉的思考。</span>
@@ -362,12 +371,12 @@ a:focus-visible, button:focus-visible {
 
     <section class="epigraph reveal">
       <blockquote>
-        <span lang="zh">我的命题应当是以如下方式来起阐明作用的：任何理解我的人，当他用这些命题为梯级而超越了它们时，就会终于认识到它们是无意义的。<em>可以说，在登上高处之后他必须把梯子扔掉。</em></span>
-        <span lang="en">My propositions serve as elucidations in the following way: anyone who understands me eventually recognizes them as nonsensical, when he has used them — as steps — to climb beyond them. <em>He must, so to speak, throw away the ladder after he has climbed up it.</em></span>
+        <span lang="zh">我的命题应当是以如下方式来起阐明作用的：任何理解我的人，当他用这些命题为梯级而超越了它们时，就会终于认识到它们是无意义的。<em>可以说，在登上高处之后他必须把梯子扔掉。</em>他必须超越这些命题，然后他就会正确看待世界。</span>
+        <span lang="en">My propositions serve as elucidations in the following way: anyone who understands me eventually recognizes them as nonsensical, when he has used them — as steps — to climb beyond them. <em>He must, so to speak, throw away the ladder after he has climbed up it.</em> He must transcend these propositions, and then he will see the world aright.</span>
       </blockquote>
       <cite>
-        <span lang="zh">维特根斯坦 · 逻辑哲学论 §6.54</span>
-        <span lang="en">Wittgenstein · Tractatus §6.54</span>
+        <span lang="zh">维特根斯坦 · 逻辑哲学论 § 6.54</span>
+        <span lang="en">Wittgenstein · Tractatus § 6.54</span>
       </cite>
     </section>
 
@@ -397,11 +406,11 @@ a:focus-visible, button:focus-visible {
             <a href="./posts/ladder-origin.html">
               <h3 class="title">
                 <span lang="zh">亚轩的梯子：一个站名的来历<span class="arrow">→</span></span>
-                <span lang="en">Yaxuan's Ladder: On the Name<span class="arrow">→</span></span>
+                <span lang="en">Yaxuan’s Ladder: On the Name<span class="arrow">→</span></span>
               </h3>
               <p class="excerpt">
                 <span lang="zh">关于维特根斯坦那把著名的梯子，以及为什么用它来命名这个博客。</span>
-                <span lang="en">On Wittgenstein's famous ladder, and why I chose it as the name of this notebook.</span>
+                <span lang="en">On Wittgenstein’s famous ladder, and why I chose it as the name of this notebook.</span>
               </p>
             </a>
           </div>

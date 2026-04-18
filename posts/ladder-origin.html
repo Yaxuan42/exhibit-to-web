@@ -5,15 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>亚轩的梯子：一个站名的来历 · 亚轩的梯子</title>
 <meta name="description" content="关于维特根斯坦那把著名的梯子，以及为什么用它来命名这个博客。">
+<meta name="theme-color" content="#FAF8F3">
+<link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23FAF8F3'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Songti SC, Noto Serif SC, serif' font-size='22' font-weight='700' fill='%238B3A2F'>梯</text></svg>">
+<script>
+(function(){try{var l=localStorage.getItem('site-lang')||'zh';var d=document.documentElement;d.setAttribute('data-lang',l);d.setAttribute('lang',l==='zh'?'zh-CN':'en');}catch(e){}})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #FAF8F3;
   --ink: #1A1A1A;
   --ink-2: #4A4A4A;
-  --ink-3: #8A8A8A;
+  --ink-3: #6E6E6E;
   --ink-4: #B8B0A0;
   --rule: #D9D2C2;
   --accent: #8B3A2F;
@@ -41,6 +47,7 @@ body {
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern", "liga", "calt";
   font-variant-numeric: oldstyle-nums proportional-nums;
+  font-synthesis: none;
   overflow-x: hidden;
 }
 .en, [lang="en"] {
@@ -55,7 +62,8 @@ nav.site {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  background: rgba(250, 248, 243, 0.94);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   padding: calc(var(--u) * 2.5) 0;
@@ -64,6 +72,9 @@ nav.site {
   align-items: baseline;
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s ease;
+}
+@supports not (backdrop-filter: blur(1px)) {
+  nav.site { background: var(--bg); }
 }
 nav.site.scrolled { border-bottom-color: var(--rule); }
 .mark {
@@ -128,11 +139,18 @@ html[data-lang="en"] .toggle .opt[data-k="en"] {
 [data-lang="en"] .article-head h1 { font-family: var(--serif-en); font-weight: 500; }
 .article-head .subtitle {
   margin-top: calc(var(--u) * 2);
-  font-family: var(--serif-en);
-  font-style: italic;
   font-size: 1.0625rem;
   color: var(--ink-2);
+  font-weight: 400;
+  line-height: 1.6;
+}
+.article-head .subtitle [lang="en"] {
+  font-family: var(--serif-en);
+  font-style: italic;
   font-weight: 300;
+}
+.article-head .subtitle [lang="zh"] {
+  font-family: var(--serif-cn);
 }
 .meta {
   margin-top: calc(var(--u) * 4);
@@ -156,21 +174,23 @@ article.prose {
 }
 article.prose p {
   margin-bottom: 1.5em;
+}
+article.prose [lang="en"] p {
   text-align: justify;
-  text-justify: inter-character;
   hyphens: auto;
 }
-article.prose p:first-of-type::first-letter {
-  font-family: var(--serif-cn);
-  font-weight: 700;
-  font-size: 2.4em;
+article.prose [lang="en"] > p:first-of-type::first-letter {
+  font-family: var(--serif-en);
+  font-weight: 500;
+  font-size: 3.2em;
   float: left;
-  line-height: 1;
-  padding: 0.12em 0.15em 0 0;
+  line-height: 0.88;
+  padding: 0.08em 0.1em 0 0;
   color: var(--ink);
 }
-[data-lang="en"] article.prose p:first-of-type::first-letter {
-  font-family: var(--serif-en);
+article.prose [lang="zh"] > p:first-of-type::first-line {
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 article.prose h2 {
   font-family: var(--serif-cn);
@@ -198,14 +218,19 @@ article.prose blockquote {
   font-size: 1rem;
   line-height: 1.9;
 }
-article.prose blockquote [lang="en"] {
+article.prose blockquote em { font-style: italic; color: var(--ink); }
+article.prose blockquote [lang="zh"] em { font-style: normal; font-weight: 600; }
+article.prose blockquote .attr {
   display: block;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--ink-3);
   margin-top: 0.6em;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
 }
-article.prose em { font-style: italic; }
+article.prose em { font-style: italic; color: var(--ink); }
+article.prose [lang="zh"] em { font-style: normal; font-weight: 600; }
 article.prose strong { font-weight: 500; color: var(--ink); }
 article.prose a {
   color: var(--ink);
@@ -219,13 +244,15 @@ article.prose a:hover { color: var(--accent); text-decoration-color: var(--accen
 article.prose hr {
   border: none;
   text-align: center;
-  margin: 2.5em 0;
-  color: var(--ink-4);
-  font-size: 1em;
+  margin: 2.8em 0;
+  height: 1em;
+  color: var(--ink-3);
+  font-size: 0.9em;
   line-height: 1;
+  letter-spacing: 0.6em;
 }
 article.prose hr::before {
-  content: "❦";
+  content: "· · ·";
   font-family: var(--serif-en);
 }
 
@@ -302,7 +329,7 @@ a:focus-visible, button:focus-visible {
 
   <nav class="site" id="nav">
     <a href="../index.html" class="mark">
-      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan’s Ladder</span>
     </a>
     <button class="toggle" id="langToggle" aria-label="Switch language">
       <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
@@ -318,11 +345,11 @@ a:focus-visible, button:focus-visible {
   <header class="article-head">
     <h1>
       <span lang="zh">亚轩的梯子：一个站名的来历</span>
-      <span lang="en">Yaxuan's Ladder: On the Name</span>
+      <span lang="en">Yaxuan’s Ladder: On the Name</span>
     </h1>
     <p class="subtitle">
-      <span lang="zh">Yaxuan's Ladder — On the Name</span>
-      <span lang="en">On Wittgenstein's ladder, and why this notebook bears its name.</span>
+      <span lang="zh">关于那把梯子，以及为什么选它做站名</span>
+      <span lang="en">On Wittgenstein’s ladder, and why this notebook bears its name.</span>
     </p>
     <div class="meta">
       <span>2026 · 04 · 18</span>
@@ -341,7 +368,7 @@ a:focus-visible, button:focus-visible {
 
       <blockquote>
         我的命题应当是以如下方式来起阐明作用的：任何理解我的人，当他用这些命题为梯级而超越了它们时，就会终于认识到它们是无意义的。<em>可以说，在登上高处之后他必须把梯子扔掉。</em>他必须超越这些命题，然后他就会正确看待世界。
-        <span lang="en">— 维特根斯坦，《逻辑哲学论》§ 6.54</span>
+        <span class="attr">维特根斯坦 · 逻辑哲学论 § 6.54</span>
       </blockquote>
 
       <p>一本书花了七十几页反复搭建一套逻辑，最后告诉读者：它是错的，把它扔掉吧。乍看是自毁，细想是坦诚——任何用于攀登的工具，都会在攀登完成之后失去意义。工具不是目的，它是目的的台阶。</p>
@@ -373,20 +400,20 @@ a:focus-visible, button:focus-visible {
     <div lang="en">
       <p>Naming a blog is an underrated act. A name is not just a label; it sets the coordinates of self-examination — what you write, why, and how seriously.</p>
 
-      <p>This site is called <em>Yaxuan's Ladder</em>. The ladder comes from Wittgenstein. Near the end of the <em>Tractatus Logico-Philosophicus</em> — a book written in the form of rigorous logical propositions — he abruptly lets those propositions dissolve themselves:</p>
+      <p>This site is called <em>Yaxuan’s Ladder</em>. The ladder comes from Wittgenstein. Near the end of the <em>Tractatus Logico-Philosophicus</em> — a book written in the form of rigorous logical propositions — he abruptly lets those propositions dissolve themselves:</p>
 
       <blockquote>
         My propositions serve as elucidations in the following way: anyone who understands me eventually recognizes them as nonsensical, when he has used them — as steps — to climb beyond them. <em>He must, so to speak, throw away the ladder after he has climbed up it.</em> He must transcend these propositions, and then he will see the world aright.
-        <span lang="zh">— Wittgenstein, <em>Tractatus</em> § 6.54</span>
+        <span class="attr">Wittgenstein · Tractatus § 6.54</span>
       </blockquote>
 
-      <p>Seventy pages of careful logic, only to be told at the end: it's wrong, throw it away. At first this reads like self-destruction. On reflection it is simply honest — any tool used for climbing loses its meaning once the climb is done. The tool is not the goal; it is a step toward the goal.</p>
+      <p>Seventy pages of careful logic, only to be told at the end: it’s wrong, throw it away. At first this reads like self-destruction. On reflection it is simply honest — any tool used for climbing loses its meaning once the climb is done. The tool is not the goal; it is a step toward the goal.</p>
 
       <h2>Why this metaphor for the name</h2>
 
-      <p>I'm a product lead who also codes — or, more precisely, someone who still wants to write code after AI has made writing code cheap. I generate and discard a great deal every day: product hypotheses, prompts, architecture sketches, half-written essays. Most are not endpoints; they are footholds from which to see where to step next.</p>
+      <p>I’m a product lead who also codes — or, more precisely, someone who still wants to write code after AI has made writing code cheap. I generate and discard a great deal every day: product hypotheses, prompts, architecture sketches, half-written essays. Most are not endpoints; they are footholds from which to see where to step next.</p>
 
-      <p>A blog is the same. I don't believe a single post can deliver a final answer, nor do I expect to still agree with myself two years from now. But writing things down is worth it — each post becomes one rung of the ladder, and without it I cannot see the next.</p>
+      <p>A blog is the same. I don’t believe a single post can deliver a final answer, nor do I expect to still agree with myself two years from now. But writing things down is worth it — each post becomes one rung of the ladder, and without it I cannot see the next.</p>
 
       <p>So "ladder" carries three meanings for me:</p>
 
@@ -394,14 +421,14 @@ a:focus-visible, button:focus-visible {
       <p>A blog is not a portfolio. It is a thinking tool. The words go out, but they are first of all for me. If one day I no longer need a particular post, that is exactly the sign that it has done its work.</p>
 
       <h3>II · Provisionality</h3>
-      <p>Permission to be unfinished. Wittgenstein doesn't ask that his propositions be eternally true — only that they support the next step. For a writer, that is an enormous relief.</p>
+      <p>Permission to be unfinished. Wittgenstein doesn’t ask that his propositions be eternally true — only that they support the next step. For a writer, that is an enormous relief.</p>
 
       <h3>III · Direction</h3>
-      <p>A ladder points up. It is not a map for wandering; it implies a direction, even if the direction can't be fully articulated.</p>
+      <p>A ladder points up. It is not a map for wandering; it implies a direction, even if the direction can’t be fully articulated.</p>
 
       <hr>
 
-      <p>A footnote on the Wikipedia entry notes that the metaphor was not Wittgenstein's invention — Schopenhauer, Sextus Empiricus, and even Zhuangzi used the same figure. Zhuangzi wrote: <em>once the fish is caught, the trap is forgotten; once the meaning is grasped, the words are forgotten.</em> Same ladder, different century.</p>
+      <p>A footnote on the Wikipedia entry notes that the metaphor was not Wittgenstein’s invention — Schopenhauer, Sextus Empiricus, and even Zhuangzi used the same figure. Zhuangzi wrote: <em>once the fish is caught, the trap is forgotten; once the meaning is grasped, the words are forgotten.</em> Same ladder, different century.</p>
 
       <p>If this blog lasts long enough, one day I will come back to this post and find it both earnest and a little funny. That would be good news — it would mean the ladder did its job.</p>
     </div>
