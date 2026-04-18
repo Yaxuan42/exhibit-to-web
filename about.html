@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 · 亚轩的梯子</title>
+<meta name="description" content="关于亚轩和这个博客。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF8F3;
+  --ink: #1A1A1A;
+  --ink-2: #4A4A4A;
+  --ink-3: #8A8A8A;
+  --ink-4: #B8B0A0;
+  --rule: #D9D2C2;
+  --accent: #8B3A2F;
+  --u: 8px;
+  --serif-cn: "Noto Serif SC", "Songti SC", "Source Han Serif SC", serif;
+  --serif-en: "Fraunces", "EB Garamond", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 17px;
+  hanging-punctuation: first last;
+}
+@media (max-width: 640px) { html { font-size: 16px; } }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif-cn);
+  font-weight: 400;
+  line-height: 1.9;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+}
+.en, [lang="en"] {
+  font-family: var(--serif-en);
+  font-feature-settings: "kern", "liga", "calt", "ss01";
+}
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 calc(var(--u) * 3); }
+
+nav.site {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: calc(var(--u) * 2.5) 0;
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+nav.site.scrolled { border-bottom-color: var(--rule); }
+.mark {
+  font-family: var(--serif-cn);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.toggle {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  background: none; border: none; cursor: pointer;
+  padding: calc(var(--u) * 0.5) 0;
+  text-transform: uppercase;
+  display: inline-flex; gap: 0.5em; align-items: baseline;
+}
+.toggle .opt { transition: color 0.2s ease; padding: 0 2px; }
+.toggle .sep { color: var(--ink-4); }
+.toggle:hover .opt { color: var(--ink-2); }
+html[data-lang="zh"] .toggle .opt[data-k="zh"],
+html[data-lang="en"] .toggle .opt[data-k="en"] {
+  color: var(--ink); font-weight: 500;
+}
+
+.page {
+  padding: calc(var(--u) * 12) 0 calc(var(--u) * 10);
+}
+.page h1 {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+}
+[data-lang="en"] .page h1 { font-family: var(--serif-en); font-weight: 500; }
+.page h1 .sub {
+  display: block;
+  font-family: var(--serif-en);
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.45em;
+  color: var(--ink-3);
+  margin-top: 0.6em;
+  letter-spacing: 0.01em;
+}
+.page .body {
+  margin-top: calc(var(--u) * 6);
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  max-width: 32rem;
+}
+.page .body p { margin-bottom: 1.3em; }
+.page .body strong { color: var(--ink); font-weight: 500; }
+.page .body a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+.page .body a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+
+.contact {
+  margin-top: calc(var(--u) * 6);
+  padding-top: calc(var(--u) * 4);
+  border-top: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: calc(var(--u) * 1.5) calc(var(--u) * 3);
+  font-size: 0.9375rem;
+}
+.contact dt {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  padding-top: 0.3em;
+}
+.contact dd a {
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.contact dd a:hover { color: var(--accent); }
+
+footer.site {
+  margin-top: calc(var(--u) * 12);
+  padding: calc(var(--u) * 4) 0 calc(var(--u) * 8);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 calc(var(--u) * 2.5); }
+  .contact { grid-template-columns: 1fr; gap: calc(var(--u) * 0.5) 0; }
+  .contact dd { margin-bottom: calc(var(--u) * 2); }
+}
+
+html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
+html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.6, 0.2, 1),
+              transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+::selection { background: var(--accent); color: var(--bg); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site" id="nav">
+    <a href="./index.html" class="mark">
+      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+    </a>
+    <button class="toggle" id="langToggle" aria-label="Switch language">
+      <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
+    </button>
+  </nav>
+
+  <section class="page reveal">
+    <h1>
+      <span lang="zh">关于<span class="sub">About</span></span>
+      <span lang="en">About<span class="sub">关于</span></span>
+    </h1>
+
+    <div class="body">
+      <div lang="zh">
+        <p>你好。我叫<strong>亚轩</strong>，产品负责人，也写代码。</p>
+        <p>这个博客记录产品、AI，以及一切用过就该扔掉的思考。名字来自维特根斯坦的<a href="./posts/ladder-origin.html">那把梯子</a>。</p>
+        <p>更详细的内容暂时先留白。等积累了足够的"梯子"之后再补上。</p>
+      </div>
+      <div lang="en">
+        <p>Hi. I'm <strong>Yaxuan</strong>, a product lead who also writes code.</p>
+        <p>This notebook collects thoughts on products, AI, and ideas meant to be discarded once understood. The name comes from <a href="./posts/ladder-origin.html">Wittgenstein's ladder</a>.</p>
+        <p>A fuller bio will arrive once I've built enough rungs to stand on.</p>
+      </div>
+
+      <dl class="contact">
+        <dt>Email</dt>
+        <dd><a href="mailto:hello@yaxuan.space">hello@yaxuan.space</a></dd>
+        <dt>GitHub</dt>
+        <dd><a href="https://github.com/Yaxuan42" target="_blank" rel="noopener">@Yaxuan42</a></dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer class="site">© 2026 Yaxuan</footer>
+
+</div>
+
+<script>
+(function() {
+  const html = document.documentElement;
+  const saved = localStorage.getItem('site-lang') || 'zh';
+  setLang(saved);
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    localStorage.setItem('site-lang', lang);
+  }
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLang(html.getAttribute('data-lang') === 'zh' ? 'en' : 'zh');
+  });
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>亚轩的梯子：一个站名的来历 · 亚轩的梯子</title>
+<meta name="description" content="关于维特根斯坦那把著名的梯子，以及为什么用它来命名这个博客。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF8F3;
+  --ink: #1A1A1A;
+  --ink-2: #4A4A4A;
+  --ink-3: #8A8A8A;
+  --ink-4: #B8B0A0;
+  --rule: #D9D2C2;
+  --accent: #8B3A2F;
+  --u: 8px;
+  --serif-cn: "Noto Serif SC", "Songti SC", "Source Han Serif SC", serif;
+  --serif-en: "Fraunces", "EB Garamond", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 17px;
+  hanging-punctuation: first last;
+}
+@media (max-width: 640px) { html { font-size: 16px; } }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif-cn);
+  font-weight: 400;
+  line-height: 1.9;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  overflow-x: hidden;
+}
+.en, [lang="en"] {
+  font-family: var(--serif-en);
+  font-feature-settings: "kern", "liga", "calt", "ss01";
+}
+
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 calc(var(--u) * 3); }
+
+/* Nav */
+nav.site {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: calc(var(--u) * 2.5) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+nav.site.scrolled { border-bottom-color: var(--rule); }
+.mark {
+  font-family: var(--serif-cn);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.toggle {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  background: none; border: none; cursor: pointer;
+  padding: calc(var(--u) * 0.5) 0;
+  text-transform: uppercase;
+  display: inline-flex;
+  gap: 0.5em;
+  align-items: baseline;
+}
+.toggle .opt { transition: color 0.2s ease; padding: 0 2px; }
+.toggle .sep { color: var(--ink-4); }
+.toggle:hover .opt { color: var(--ink-2); }
+html[data-lang="zh"] .toggle .opt[data-k="zh"],
+html[data-lang="en"] .toggle .opt[data-k="en"] {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+/* Breadcrumb */
+.crumb {
+  margin: calc(var(--u) * 6) 0 calc(var(--u) * 4);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.crumb a {
+  color: var(--ink-3);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.crumb a:hover { color: var(--ink); }
+.crumb .sep { margin: 0 0.8em; color: var(--ink-4); }
+
+/* Article header */
+.article-head {
+  padding: calc(var(--u) * 2) 0 calc(var(--u) * 7);
+  border-bottom: 1px solid var(--rule);
+}
+.article-head h1 {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: clamp(1.875rem, 4.5vw, 2.625rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+[data-lang="en"] .article-head h1 { font-family: var(--serif-en); font-weight: 500; }
+.article-head .subtitle {
+  margin-top: calc(var(--u) * 2);
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  font-weight: 300;
+}
+.meta {
+  margin-top: calc(var(--u) * 4);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex;
+  gap: 1.5em;
+  flex-wrap: wrap;
+}
+.meta .sep { color: var(--ink-4); }
+
+/* Article body */
+article.prose {
+  padding: calc(var(--u) * 8) 0 calc(var(--u) * 10);
+  font-size: 1.0625rem;
+  color: var(--ink);
+}
+article.prose p {
+  margin-bottom: 1.5em;
+  text-align: justify;
+  text-justify: inter-character;
+  hyphens: auto;
+}
+article.prose p:first-of-type::first-letter {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: 2.4em;
+  float: left;
+  line-height: 1;
+  padding: 0.12em 0.15em 0 0;
+  color: var(--ink);
+}
+[data-lang="en"] article.prose p:first-of-type::first-letter {
+  font-family: var(--serif-en);
+}
+article.prose h2 {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.4;
+  margin: 2.5em 0 0.8em;
+}
+[data-lang="en"] article.prose h2 { font-family: var(--serif-en); font-weight: 500; }
+article.prose h3 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 2em 0 0.6em;
+  font-weight: 500;
+}
+article.prose blockquote {
+  margin: 2em 0;
+  padding: 0 0 0 calc(var(--u) * 3);
+  border-left: 2px solid var(--rule);
+  font-family: var(--serif-cn);
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+article.prose blockquote [lang="en"] {
+  display: block;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink-3);
+  margin-top: 0.6em;
+}
+article.prose em { font-style: italic; }
+article.prose strong { font-weight: 500; color: var(--ink); }
+article.prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+article.prose a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+article.prose hr {
+  border: none;
+  text-align: center;
+  margin: 2.5em 0;
+  color: var(--ink-4);
+  font-size: 1em;
+  line-height: 1;
+}
+article.prose hr::before {
+  content: "❦";
+  font-family: var(--serif-en);
+}
+
+/* Article footer / nav */
+.article-foot {
+  padding: calc(var(--u) * 5) 0 calc(var(--u) * 4);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--u) * 3);
+  flex-wrap: wrap;
+}
+.article-foot a {
+  font-family: var(--serif-cn);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: block;
+  max-width: 14rem;
+}
+[data-lang="en"] .article-foot a { font-family: var(--serif-en); }
+.article-foot a:hover { color: var(--accent); }
+.article-foot .label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 0.4em;
+}
+.article-foot .prev { text-align: left; }
+.article-foot .next { text-align: right; margin-left: auto; }
+
+footer.site {
+  padding: calc(var(--u) * 4) 0 calc(var(--u) * 8);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 calc(var(--u) * 2.5); }
+  article.prose p:first-of-type::first-letter { font-size: 2em; }
+}
+
+html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
+html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.6, 0.2, 1),
+              transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+::selection { background: var(--accent); color: var(--bg); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site" id="nav">
+    <a href="../index.html" class="mark">
+      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+    </a>
+    <button class="toggle" id="langToggle" aria-label="Switch language">
+      <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
+    </button>
+  </nav>
+
+  <nav class="crumb">
+    <a href="../index.html">
+      <span lang="zh">← 返回手记</span><span lang="en">← Back to writings</span>
+    </a>
+  </nav>
+
+  <header class="article-head">
+    <h1>
+      <span lang="zh">亚轩的梯子：一个站名的来历</span>
+      <span lang="en">Yaxuan's Ladder: On the Name</span>
+    </h1>
+    <p class="subtitle">
+      <span lang="zh">Yaxuan's Ladder — On the Name</span>
+      <span lang="en">On Wittgenstein's ladder, and why this notebook bears its name.</span>
+    </p>
+    <div class="meta">
+      <span>2026 · 04 · 18</span>
+      <span class="sep">·</span>
+      <span lang="zh">约 800 字</span>
+      <span lang="en">~ 3 min read</span>
+    </div>
+  </header>
+
+  <article class="prose">
+
+    <div lang="zh">
+      <p>给博客取名是一件被人低估的事。名字不只是标签，它也设定自我审视的坐标——你写什么、为什么写、写到什么程度才算数。</p>
+
+      <p>这个站点叫"亚轩的梯子"。梯子的说法来自维特根斯坦。他在《逻辑哲学论》接近尾声处写下了这段话——一本以严格的逻辑命题结构写成的书，快结束时却突然让这些命题自我消解：</p>
+
+      <blockquote>
+        我的命题应当是以如下方式来起阐明作用的：任何理解我的人，当他用这些命题为梯级而超越了它们时，就会终于认识到它们是无意义的。<em>可以说，在登上高处之后他必须把梯子扔掉。</em>他必须超越这些命题，然后他就会正确看待世界。
+        <span lang="en">— 维特根斯坦，《逻辑哲学论》§ 6.54</span>
+      </blockquote>
+
+      <p>一本书花了七十几页反复搭建一套逻辑，最后告诉读者：它是错的，把它扔掉吧。乍看是自毁，细想是坦诚——任何用于攀登的工具，都会在攀登完成之后失去意义。工具不是目的，它是目的的台阶。</p>
+
+      <h2>为什么用这个比喻做站名</h2>
+
+      <p>我是一个产品负责人，也写代码——或者说，在 AI 把写代码这件事变成廉价之后，我仍然愿意动手写代码。每天被我用掉又扔掉的东西非常多：一个产品假设、一段 prompt、一次架构草图、一篇还没发出去的长文。它们大多数都不是终点，只是为了让我看清下一步的立足点。</p>
+
+      <p>写博客也是这样。我不相信一篇文章能给出终极答案，也不指望自己两年后仍然同意今天写下的结论。但文章值得写下来——因为它构成了那一阶梯子，没有它我看不到再上一层。</p>
+
+      <p>所以"梯子"对我来说有三层意思：</p>
+
+      <h3>一 · 工具感</h3>
+      <p>博客不是作品集，是思考工具。发出去的文字首先是给我自己看的。如果某一天我不再需要它，那恰好说明它完成了它的任务。</p>
+
+      <h3>二 · 临时性</h3>
+      <p>允许自己写得不究竟。维特根斯坦不要求他的命题永远正确，他只要求它们能支撑你登上下一阶。这对一个写作者来说是巨大的解脱。</p>
+
+      <h3>三 · 方向感</h3>
+      <p>梯子是向上的。它不是漫游的地图，它暗示一个方向——哪怕这个方向你描述不清楚。</p>
+
+      <hr>
+
+      <p>维基百科这个词条下还有一段旁注——说这个比喻并非维特根斯坦首创，叔本华、塞克斯都·恩披里柯、甚至庄子，都用过类似的意象。庄子说"得鱼而忘筌，得意而忘言"：抓到鱼就可以把网扔了，理解了意思就可以把话扔了。和梯子是同一件事。</p>
+
+      <p>这个博客如果做得足够长久，总有一天我会回过头看今天这篇，觉得它既朴素又有点好笑。那会是一个好消息——说明梯子起了作用。</p>
+    </div>
+
+    <div lang="en">
+      <p>Naming a blog is an underrated act. A name is not just a label; it sets the coordinates of self-examination — what you write, why, and how seriously.</p>
+
+      <p>This site is called <em>Yaxuan's Ladder</em>. The ladder comes from Wittgenstein. Near the end of the <em>Tractatus Logico-Philosophicus</em> — a book written in the form of rigorous logical propositions — he abruptly lets those propositions dissolve themselves:</p>
+
+      <blockquote>
+        My propositions serve as elucidations in the following way: anyone who understands me eventually recognizes them as nonsensical, when he has used them — as steps — to climb beyond them. <em>He must, so to speak, throw away the ladder after he has climbed up it.</em> He must transcend these propositions, and then he will see the world aright.
+        <span lang="zh">— Wittgenstein, <em>Tractatus</em> § 6.54</span>
+      </blockquote>
+
+      <p>Seventy pages of careful logic, only to be told at the end: it's wrong, throw it away. At first this reads like self-destruction. On reflection it is simply honest — any tool used for climbing loses its meaning once the climb is done. The tool is not the goal; it is a step toward the goal.</p>
+
+      <h2>Why this metaphor for the name</h2>
+
+      <p>I'm a product lead who also codes — or, more precisely, someone who still wants to write code after AI has made writing code cheap. I generate and discard a great deal every day: product hypotheses, prompts, architecture sketches, half-written essays. Most are not endpoints; they are footholds from which to see where to step next.</p>
+
+      <p>A blog is the same. I don't believe a single post can deliver a final answer, nor do I expect to still agree with myself two years from now. But writing things down is worth it — each post becomes one rung of the ladder, and without it I cannot see the next.</p>
+
+      <p>So "ladder" carries three meanings for me:</p>
+
+      <h3>I · Tool</h3>
+      <p>A blog is not a portfolio. It is a thinking tool. The words go out, but they are first of all for me. If one day I no longer need a particular post, that is exactly the sign that it has done its work.</p>
+
+      <h3>II · Provisionality</h3>
+      <p>Permission to be unfinished. Wittgenstein doesn't ask that his propositions be eternally true — only that they support the next step. For a writer, that is an enormous relief.</p>
+
+      <h3>III · Direction</h3>
+      <p>A ladder points up. It is not a map for wandering; it implies a direction, even if the direction can't be fully articulated.</p>
+
+      <hr>
+
+      <p>A footnote on the Wikipedia entry notes that the metaphor was not Wittgenstein's invention — Schopenhauer, Sextus Empiricus, and even Zhuangzi used the same figure. Zhuangzi wrote: <em>once the fish is caught, the trap is forgotten; once the meaning is grasped, the words are forgotten.</em> Same ladder, different century.</p>
+
+      <p>If this blog lasts long enough, one day I will come back to this post and find it both earnest and a little funny. That would be good news — it would mean the ladder did its job.</p>
+    </div>
+
+  </article>
+
+  <nav class="article-foot">
+    <a class="prev" href="./how-this-site-was-built.html">
+      <span class="label"><span lang="zh">上一篇</span><span lang="en">Previous</span></span>
+      <span lang="zh">如何用 Claude Code 半天搭起这个博客</span>
+      <span lang="en">How I Built This Blog in Half a Day</span>
+    </a>
+    <a class="next" href="../index.html">
+      <span class="label"><span lang="zh">返回</span><span lang="en">Back</span></span>
+      <span lang="zh">手记列表</span>
+      <span lang="en">All writings</span>
+    </a>
+  </nav>
+
+  <footer class="site">© 2026 Yaxuan</footer>
+
+</div>
+
+<script>
+(function() {
+  const html = document.documentElement;
+  const saved = localStorage.getItem('site-lang') || 'zh';
+  setLang(saved);
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    localStorage.setItem('site-lang', lang);
+  }
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLang(html.getAttribute('data-lang') === 'zh' ? 'en' : 'zh');
+  });
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

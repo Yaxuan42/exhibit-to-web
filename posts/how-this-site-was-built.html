@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>如何用 Claude Code 半天搭起这个博客 · 亚轩的梯子</title>
+<meta name="description" content="一次 Brief → Design → Build → Deploy 的完整记录：从一句"想做个博客"到线上可访问。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Noto+Serif+SC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FAF8F3;
+  --ink: #1A1A1A;
+  --ink-2: #4A4A4A;
+  --ink-3: #8A8A8A;
+  --ink-4: #B8B0A0;
+  --rule: #D9D2C2;
+  --accent: #8B3A2F;
+  --code-bg: #F1ECE0;
+  --u: 8px;
+  --serif-cn: "Noto Serif SC", "Songti SC", "Source Han Serif SC", serif;
+  --serif-en: "Fraunces", "EB Garamond", Georgia, serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 17px;
+  hanging-punctuation: first last;
+}
+@media (max-width: 640px) { html { font-size: 16px; } }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--serif-cn);
+  font-weight: 400;
+  line-height: 1.9;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern", "liga", "calt";
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  overflow-x: hidden;
+}
+.en, [lang="en"] {
+  font-family: var(--serif-en);
+  font-feature-settings: "kern", "liga", "calt", "ss01";
+}
+
+.wrap { max-width: 640px; margin: 0 auto; padding: 0 calc(var(--u) * 3); }
+
+nav.site {
+  position: sticky; top: 0; z-index: 20;
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: calc(var(--u) * 2.5) 0;
+  display: flex; justify-content: space-between; align-items: baseline;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+nav.site.scrolled { border-bottom-color: var(--rule); }
+.mark {
+  font-family: var(--serif-cn);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.toggle {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-3);
+  background: none; border: none; cursor: pointer;
+  padding: calc(var(--u) * 0.5) 0;
+  text-transform: uppercase;
+  display: inline-flex; gap: 0.5em; align-items: baseline;
+}
+.toggle .opt { transition: color 0.2s ease; padding: 0 2px; }
+.toggle .sep { color: var(--ink-4); }
+.toggle:hover .opt { color: var(--ink-2); }
+html[data-lang="zh"] .toggle .opt[data-k="zh"],
+html[data-lang="en"] .toggle .opt[data-k="en"] {
+  color: var(--ink); font-weight: 500;
+}
+
+.crumb {
+  margin: calc(var(--u) * 6) 0 calc(var(--u) * 4);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.crumb a { color: var(--ink-3); text-decoration: none; transition: color 0.2s ease; }
+.crumb a:hover { color: var(--ink); }
+
+.article-head {
+  padding: calc(var(--u) * 2) 0 calc(var(--u) * 7);
+  border-bottom: 1px solid var(--rule);
+}
+.article-head h1 {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: clamp(1.875rem, 4.5vw, 2.625rem);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  text-wrap: balance;
+}
+[data-lang="en"] .article-head h1 { font-family: var(--serif-en); font-weight: 500; }
+.article-head .subtitle {
+  margin-top: calc(var(--u) * 2);
+  font-family: var(--serif-en);
+  font-style: italic;
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+  font-weight: 300;
+}
+.meta {
+  margin-top: calc(var(--u) * 4);
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums lining-nums;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  display: flex; gap: 1.5em; flex-wrap: wrap;
+}
+.meta .sep { color: var(--ink-4); }
+
+article.prose {
+  padding: calc(var(--u) * 8) 0 calc(var(--u) * 10);
+  font-size: 1.0625rem;
+}
+article.prose p {
+  margin-bottom: 1.5em;
+}
+article.prose p:first-of-type::first-letter {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: 2.4em;
+  float: left;
+  line-height: 1;
+  padding: 0.12em 0.15em 0 0;
+}
+[data-lang="en"] article.prose p:first-of-type::first-letter { font-family: var(--serif-en); }
+article.prose h2 {
+  font-family: var(--serif-cn);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.4;
+  margin: 2.5em 0 0.8em;
+}
+[data-lang="en"] article.prose h2 { font-family: var(--serif-en); font-weight: 500; }
+article.prose h3 {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin: 2em 0 0.6em;
+  font-weight: 500;
+}
+article.prose blockquote {
+  margin: 2em 0;
+  padding: 0 0 0 calc(var(--u) * 3);
+  border-left: 2px solid var(--rule);
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.9;
+}
+article.prose em { font-style: italic; }
+article.prose strong { font-weight: 500; color: var(--ink); }
+article.prose a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ink-4);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+article.prose a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+article.prose ul, article.prose ol {
+  margin: 0 0 1.5em 1.2em;
+  padding: 0;
+}
+article.prose li {
+  margin-bottom: 0.5em;
+  line-height: 1.85;
+}
+article.prose code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+  background: var(--code-bg);
+  padding: 0.15em 0.4em;
+  border-radius: 2px;
+  color: var(--ink);
+}
+article.prose pre {
+  background: var(--code-bg);
+  padding: calc(var(--u) * 2.5) calc(var(--u) * 3);
+  overflow-x: auto;
+  margin: 2em -8px 2em -8px;
+  border-radius: 2px;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+article.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+  color: var(--ink);
+}
+article.prose hr {
+  border: none;
+  text-align: center;
+  margin: 2.5em 0;
+  color: var(--ink-4);
+  line-height: 1;
+}
+article.prose hr::before {
+  content: "❦";
+  font-family: var(--serif-en);
+}
+article.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2em 0;
+  font-size: 0.9375rem;
+}
+article.prose th, article.prose td {
+  padding: calc(var(--u) * 1.25) calc(var(--u) * 2) calc(var(--u) * 1.25) 0;
+  text-align: left;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+}
+article.prose th {
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 500;
+  border-bottom-color: var(--ink-3);
+}
+
+.article-foot {
+  padding: calc(var(--u) * 5) 0 calc(var(--u) * 4);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  gap: calc(var(--u) * 3);
+  flex-wrap: wrap;
+}
+.article-foot a {
+  font-family: var(--serif-cn);
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: block;
+  max-width: 14rem;
+}
+[data-lang="en"] .article-foot a { font-family: var(--serif-en); }
+.article-foot a:hover { color: var(--accent); }
+.article-foot .label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  margin-bottom: 0.4em;
+}
+.article-foot .next { text-align: right; margin-left: auto; }
+
+footer.site {
+  padding: calc(var(--u) * 4) 0 calc(var(--u) * 8);
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .wrap { padding: 0 calc(var(--u) * 2.5); }
+  article.prose p:first-of-type::first-letter { font-size: 2em; }
+  article.prose pre { margin-left: calc(var(--u) * -2); margin-right: calc(var(--u) * -2); }
+}
+
+html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
+html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.9s cubic-bezier(0.2, 0.6, 0.2, 1),
+              transform 0.9s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+::selection { background: var(--accent); color: var(--bg); }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: 1px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="site" id="nav">
+    <a href="../index.html" class="mark">
+      <span lang="zh">亚轩的梯子</span><span lang="en">Yaxuan's Ladder</span>
+    </a>
+    <button class="toggle" id="langToggle" aria-label="Switch language">
+      <span class="opt" data-k="zh">中</span><span class="sep">/</span><span class="opt" data-k="en">EN</span>
+    </button>
+  </nav>
+
+  <nav class="crumb">
+    <a href="../index.html">
+      <span lang="zh">← 返回手记</span><span lang="en">← Back to writings</span>
+    </a>
+  </nav>
+
+  <header class="article-head">
+    <h1>
+      <span lang="zh">如何用 Claude Code 半天搭起这个博客</span>
+      <span lang="en">How I Built This Blog in Half a Day with Claude Code</span>
+    </h1>
+    <p class="subtitle">
+      <span lang="zh">Brief → Design → Build → Deploy，一次元叙事的记录。</span>
+      <span lang="en">A meta-narrative: the first post is the making of the site itself.</span>
+    </p>
+    <div class="meta">
+      <span>2026 · 04 · 18</span>
+      <span class="sep">·</span>
+      <span lang="zh">约 1500 字</span>
+      <span lang="en">~ 6 min read</span>
+    </div>
+  </header>
+
+  <article class="prose">
+
+    <div lang="zh">
+      <p>这个博客的第一篇文章，内容就是搭建它本身。这不是偷懒——一个刚刚诞生的空间最诚实的样本，恰恰是它从无到有的过程。</p>
+
+      <p>起点是一个叫 <a href="https://github.com/Yaxuan42/exhibit-to-web" target="_blank" rel="noopener">exhibit-to-web</a> 的 Claude Code skill，本来是给展览做线上化的。它提出一个四阶段方法——<strong>Brief → Design → Build → Deploy</strong>。我把它借来做个人博客，发现这套流程一样成立。</p>
+
+      <h2>第一阶段 · Brief</h2>
+
+      <p>我没让它立刻动手写代码。Claude 先问了我一串问题：你是谁、网站主用途、语言、板块、有没有素材、有没有美学参考。看起来像废话，但一个没经过 Brief 就动工的项目，八成会在第三天推翻重来。</p>
+
+      <p>我给出的回答很短：</p>
+
+      <blockquote>
+        产品负责人、vibeCoder。<br>
+        个人博客为主，博客不一定都是文字版本。<br>
+        主要是中文，但可以英文切换。<br>
+        初期主要是文章。<br>
+        暂时没有素材，可以参考当前站点。
+      </blockquote>
+
+      <p>关键在最后一句。它让后续所有的美学决策都有了方向——参考原项目那种"白盒子画廊"感，克制、书卷气、可读。</p>
+
+      <h2>第二阶段 · Design</h2>
+
+      <p>这一阶段它没有直接出代码，而是给我一份 <strong>Design Brief</strong>——字体、色板、间距、语气、反参考，一次性摆清楚。这种"决策先行"的做法有个好处：代码只是 Brief 的翻译，翻译没写好不怪译者，要改就改 Brief。</p>
+
+      <p>最终选定的 tokens：</p>
+
+      <table>
+        <tr><th>字体</th><td>Noto Serif SC（中）/ Fraunces（英）/ JetBrains Mono（等宽）</td></tr>
+        <tr><th>背景</th><td><code>#FAF8F3</code> 暖米白</td></tr>
+        <tr><th>文字</th><td>三级灰 <code>#1A1A1A</code> / <code>#4A4A4A</code> / <code>#8A8A8A</code></td></tr>
+        <tr><th>Accent</th><td><code>#8B3A2F</code> 低饱和朱砂</td></tr>
+        <tr><th>基准间距</th><td>8px，行高 1.85–1.9</td></tr>
+        <tr><th>Tone</th><td>克制、温暖、可读</td></tr>
+      </table>
+
+      <p>然后是 <strong>反参考</strong>——深色+渐变、卡片阴影、SaaS landing、emoji 装饰——这些"AI slop"一旦出现，一个博客就立刻降维成模板站。</p>
+
+      <h2>第三阶段 · Build</h2>
+
+      <p>写代码这部分反而是最轻的。严格遵循原项目的"单文件 HTML + 零依赖"原则：</p>
+
+      <ul>
+        <li><code>index.html</code> — 首页：题记 + 文章列表 + 语言切换</li>
+        <li><code>posts/*.html</code> — 每篇文章一个独立 HTML，便于 SEO 与独立分享</li>
+        <li><code>about.html</code> — 关于，先留占位</li>
+        <li>没有 npm、没有构建、没有框架。Google Fonts 是唯一的外部依赖</li>
+      </ul>
+
+      <p>语言切换用 <code>localStorage</code> 记住选择，CSS 里用 <code>[data-lang]</code> 控制显隐。这里有个关键决定：<strong>不是两个站点，是一个站点的两套内容</strong>。这样路由、书签、分享链接都不会出问题。</p>
+
+      <pre><code>html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
+html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
+
+      <p>想让某个元素在两种语言下都显示？加 <code>.bilingual</code>。</p>
+
+      <h2>第四阶段 · Deploy</h2>
+
+      <p>推到 GitHub，连上 Vercel，git push 即上线。域名备案这一步之后再补——国际域名配 Cloudflare DNS 先顶上。</p>
+
+      <h2>最让我意外的地方</h2>
+
+      <p>原项目是为展览设计的，核心假设是"<em>一个有物理空间的短暂事件，需要被数字化保存</em>"。个人博客的假设完全不同——它没有截止日期，内容是持续生长的。</p>
+
+      <p>但 Brief → Design → Build → Deploy 这套流程，在两种场景下同样奏效。原因可能在于：<strong>任何"把想法变成可见之物"的工作，本质上都有一个理解 → 确立 → 实现 → 让它被访问到的结构</strong>。展览和博客只是同一个结构的不同外壳。</p>
+
+      <p>这正是我想要的第一篇文章：梯子搭到一半，正在往上走，顺手把脚下的每一阶拍下来。</p>
+
+      <hr>
+
+      <p class="en" style="color: var(--ink-3); font-size: 0.9rem;"><em>This post was written collaboratively with Claude Code itself. The site you're looking at is the artifact.</em></p>
+    </div>
+
+    <div lang="en">
+      <p>The first post on this blog is about building the blog itself. Not laziness — the most honest sample from a newborn space is the record of its coming into being.</p>
+
+      <p>The starting point was a Claude Code skill called <a href="https://github.com/Yaxuan42/exhibit-to-web" target="_blank" rel="noopener">exhibit-to-web</a>, originally built for digitizing physical exhibitions. It proposes a four-phase workflow — <strong>Brief → Design → Build → Deploy</strong> — which, it turns out, works just as well for a personal blog.</p>
+
+      <h2>Phase 1 · Brief</h2>
+
+      <p>I didn't let it write code immediately. Claude first asked me a list of questions: who are you, what's the site for, what languages, what sections, what materials do you have, any aesthetic references. These feel like overhead — until you've shipped a project that skipped the Brief and had to be rebuilt in week two.</p>
+
+      <p>My answers were short:</p>
+
+      <blockquote>
+        Product lead, vibeCoder.<br>
+        Personal blog, mostly but not only text.<br>
+        Chinese primary, with an English toggle.<br>
+        Articles only, to start.<br>
+        No materials yet — reference the current site.
+      </blockquote>
+
+      <p>The last line was the key. It gave every downstream aesthetic decision a direction: that same "white-cube gallery" feel — restrained, literary, legible.</p>
+
+      <h2>Phase 2 · Design</h2>
+
+      <p>Instead of jumping into code, Claude produced a <strong>Design Brief</strong> — fonts, palette, spacing, tone, anti-references. Decisions-first has one advantage: code becomes a translation of the Brief. If the result is wrong, fix the Brief, not the code.</p>
+
+      <p>The tokens we landed on:</p>
+
+      <table>
+        <tr><th>Typefaces</th><td>Noto Serif SC (Chinese) / Fraunces (English) / JetBrains Mono (metadata)</td></tr>
+        <tr><th>Background</th><td><code>#FAF8F3</code> warm off-white</td></tr>
+        <tr><th>Ink</th><td><code>#1A1A1A</code> / <code>#4A4A4A</code> / <code>#8A8A8A</code></td></tr>
+        <tr><th>Accent</th><td><code>#8B3A2F</code> low-saturation cinnabar</td></tr>
+        <tr><th>Base unit</th><td>8px, line-height 1.85–1.9</td></tr>
+        <tr><th>Tone</th><td>restrained, warm, legible</td></tr>
+      </table>
+
+      <p>And the <strong>anti-references</strong>: dark backgrounds with gradients, card shadows, SaaS landing pages, emoji decoration. Let any of that "AI slop" in and the blog becomes a template overnight.</p>
+
+      <h2>Phase 3 · Build</h2>
+
+      <p>Writing the code was the easy part. Strict single-file HTML, zero dependencies:</p>
+
+      <ul>
+        <li><code>index.html</code> — hero, epigraph, article list, language toggle</li>
+        <li><code>posts/*.html</code> — one standalone HTML per post, good for SEO and sharing</li>
+        <li><code>about.html</code> — placeholder for now</li>
+        <li>No npm, no build, no framework. Google Fonts is the only external dependency.</li>
+      </ul>
+
+      <p>Language switching uses <code>localStorage</code> to remember the choice, and CSS driven by a <code>[data-lang]</code> attribute on <code>&lt;html&gt;</code>. One key decision: <strong>it's not two sites, it's one site with two language tracks</strong>. Routing, bookmarks, and shared links all keep working.</p>
+
+      <pre><code>html[data-lang="zh"] [lang="en"]:not(.bilingual) { display: none; }
+html[data-lang="en"] [lang="zh"]:not(.bilingual) { display: none; }</code></pre>
+
+      <p>Want an element visible in both? Add <code>.bilingual</code>.</p>
+
+      <h2>Phase 4 · Deploy</h2>
+
+      <p>Push to GitHub, connect to Vercel, live on <code>git push</code>. Domain and ICP filing can come later — an international domain plus Cloudflare DNS is enough for day one.</p>
+
+      <h2>What surprised me</h2>
+
+      <p>The original skill was built for exhibitions. Its core assumption is "<em>a time-limited physical event needs a digital afterlife.</em>" A personal blog is the opposite — no deadline, continuously growing content.</p>
+
+      <p>Yet Brief → Design → Build → Deploy works in both cases. The reason, I think, is that <strong>any work of turning an idea into something visible shares the same underlying structure: understand, decide, implement, make it reachable.</strong> Exhibitions and blogs are different shells over the same skeleton.</p>
+
+      <p>Which is exactly the first post I wanted: the ladder half-built, still climbing, photographing each rung on the way up.</p>
+
+      <hr>
+
+      <p style="color: var(--ink-3); font-size: 0.9rem;"><em>This post was written collaboratively with Claude Code itself. The site you're looking at is the artifact.</em></p>
+    </div>
+
+  </article>
+
+  <nav class="article-foot">
+    <a class="prev" href="../index.html">
+      <span class="label"><span lang="zh">返回</span><span lang="en">Back</span></span>
+      <span lang="zh">手记列表</span>
+      <span lang="en">All writings</span>
+    </a>
+    <a class="next" href="./ladder-origin.html">
+      <span class="label"><span lang="zh">下一篇</span><span lang="en">Next</span></span>
+      <span lang="zh">亚轩的梯子：一个站名的来历</span>
+      <span lang="en">Yaxuan's Ladder: On the Name</span>
+    </a>
+  </nav>
+
+  <footer class="site">© 2026 Yaxuan</footer>
+
+</div>
+
+<script>
+(function() {
+  const html = document.documentElement;
+  const saved = localStorage.getItem('site-lang') || 'zh';
+  setLang(saved);
+  function setLang(lang) {
+    html.setAttribute('data-lang', lang);
+    html.setAttribute('lang', lang === 'zh' ? 'zh-CN' : 'en');
+    localStorage.setItem('site-lang', lang);
+  }
+  document.getElementById('langToggle').addEventListener('click', () => {
+    setLang(html.getAttribute('data-lang') === 'zh' ? 'en' : 'zh');
+  });
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
